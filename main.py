@@ -12,7 +12,7 @@ client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
 @client.command()
 async def hello(ctx):
-    await ctx.send("Hello")
+    await ctx.send("Ola negoes")
 
 
 client.run(TOKEN)
