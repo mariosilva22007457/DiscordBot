@@ -1,4 +1,5 @@
 import os
+import requests
 
 from dotenv import load_dotenv
 import discord
@@ -6,9 +7,12 @@ from colorama import Back, Fore, Style
 import time
 import platform
 from discord.ext import commands
+import json
+import requests
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
+
 
 client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
@@ -35,24 +39,40 @@ async def shutdown(ctx):
 
 
 @client.command(aliases=['uinfo', 'whois'])
-async def userinfo(ctx, member:discord.Member=None):
+async def userinfo(ctx, member: discord.Member = None):
     if member == None:
         member = ctx.message.author
     roles = [role for role in member.roles]
     embed = discord.Embed(title="User info", description=f"User info on the user {member.name}",
                           color=discord.Color.green(), timestamp=ctx.message.created_at)
     embed.set_thumbnail(url=member.avatar)
-    embed.add_field(name="ID", value= member.id)
+    embed.add_field(name="ID", value=member.id)
     embed.add_field(name="Name", value=f"{member.name}#{member.discriminator}")
     embed.add_field(name="Nickname", value=member.display_name)
     embed.add_field(name="Status", value=member.status)
     embed.add_field(name="Created at ", value=member.created_at.strftime("%a, %B %#d, %Y, %I:%M %p "))
     embed.add_field(name="Joined at ", value=member.joined_at.strftime("%a, %B %#d, %Y, %I:%M %p "))
-    embed.add_field(name=f"Roles ({len(roles)})", value = " ".join([role.mention for role in roles]))
+    embed.add_field(name=f"Roles ({len(roles)})", value=" ".join([role.mention for role in roles]))
     embed.add_field(name="Top Role", value=member.top_role.mention)
-    #embed.add_field(name="Messages", value="007")
+    # embed.add_field(name="Messages", value="007")
     embed.add_field(name="Bot?", value=member.bot)
     await ctx.send(embed=embed)
+
+@client.event
+async def on_member_join(member):
+   # headers = {
+    #    "X-RapidAPI-Key": "280e7103fbmsh98c73bfa809efd1p1c9648jsn6e8c0153f599",
+   #     "X-RapidAPI-Host": "joke3.p.rapidapi.com"
+  #  }
+    #response = requests.request("GET", jokeurl, headers=headers)
+    channel = client.get_channel(837870956781109258)
+    await channel.send("Welcome!" + f" {member.display_name} ")
+    #await channel.send(json.loads(response.text)['content'])
+
+@client.event
+async def on_member_remove(member):
+    channel = client.get_channel(837870956781109258)
+    await channel.send("Goodbye!" + f" {member.display_name} ")
 
 
 client.run(TOKEN)
