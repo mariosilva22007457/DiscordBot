@@ -13,6 +13,8 @@ import requests
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 
+intents = discord.Intents.default()
+intents.members = True
 
 client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
@@ -20,6 +22,7 @@ client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 @client.command()
 async def hello(ctx):
     await ctx.send("Ola sou um bot chines ")
+
 
 
 @client.event
@@ -58,16 +61,22 @@ async def userinfo(ctx, member: discord.Member = None):
     embed.add_field(name="Bot?", value=member.bot)
     await ctx.send(embed=embed)
 
+
 @client.event
 async def on_member_join(member):
-   # headers = {
-    #    "X-RapidAPI-Key": "280e7103fbmsh98c73bfa809efd1p1c9648jsn6e8c0153f599",
-   #     "X-RapidAPI-Host": "joke3.p.rapidapi.com"
-  #  }
-    #response = requests.request("GET", jokeurl, headers=headers)
+    import requests
+    url = "https://joke3.p.rapidapi.com/v1/joke/%7Bid%7D/%7Bproperty%7D"
+
+    headers = {
+        "X-RapidAPI-Key": "280e7103fbmsh98c73bfa809efd1p1c9648jsn6e8c0153f599",
+        "X-RapidAPI-Host": "joke3.p.rapidapi.com"
+    }
+
+    response = requests.request("GET", url, headers=headers)
     channel = client.get_channel(837870956781109258)
     await channel.send("Welcome!" + f" {member.display_name} ")
-    #await channel.send(json.loads(response.text)['content'])
+    await channel.send(json.loads(response.text)['content'])
+
 
 @client.event
 async def on_member_remove(member):
