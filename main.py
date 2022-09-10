@@ -199,8 +199,8 @@ async def money(ctx,  amount: int,fromCurrency, toCurrency,):
     url = 'http://data.fixer.io/api/latest?access_key=7370ff2962d49abefc56c32f5bc74aa8'
     response = requests.get(url)
     rate = response.json()['rates'][fromCurrency]
-    amount_EUR = amount / rate
-    amount_final = amount_EUR * (response.json()['rates'][toCurrency])
+    amount_total = amount / rate
+    amount_final = amount_total* (response.json()['rates'][toCurrency])
     amount_final = round(amount_final,3)
     await ctx.send(f"{amount} {fromCurrency} is {amount_final} {toCurrency}")
 
