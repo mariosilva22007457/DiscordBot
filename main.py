@@ -173,7 +173,44 @@ async def roll(ctx, number_of_dice, number_of_sides):
     ]
     await ctx.send(', '.join(dice))
 
+""""
+    #API QUE DEMONSTRA AS CURRENCIES
+    
+    LINK: https://www.exchangerate-api.com/docs/python-currency-api
+    
+                import requests
+
+                # Where USD is the base currency you want to use
+                url = 'https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/EUR'
+                
+                # Making our request
+                response = requests.get(url)
+                data = response.json()
+                
+                # Your JSON object
+                print data
+                
+"""
+
+# TODO: < TESTAR ESTA ADIÇÃO >
+# TODO: < TESTAR BUGS >
+@client.command()
+async def hello(inputValue, TypeOfCurrencyInput):
+
+    import requests
+
+    API_URL = 'https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/EUR'
+
+    # Making our request
+    response = requests.get(API_URL)
+    data = response.json()
+
+    for currency in data.conversion_rates:
+        if currency == TypeOfCurrencyInput:
+            print(f"{inputValue} Euros = {inputValue * currency}")
 
 
+    # DEVO USAR await PARA DEVOLVER OUTPUT ????
+    #await currencyInput.send("Ola sou um bot chines")
 
 client.run(TOKEN)
