@@ -1,15 +1,13 @@
 """
         # TODO: LIST
 
-# TODO: < TESTAR ESTA ADIÇÃO >
-# TODO: < TESTAR BUGS >
-# TODO: < ADIÇÃO -> NÃO FUNCIONA >
+
 # TODO: < RESOLVER BUGS >
-# TODO: < PROBLEMAS NA EXECUÇÃO >
-# TODO: < NÃO FUNCIONA >
+# TODO: <Facilitar , melhorar interface>
+
 
 """
-from discord.ext import commands
+
 import os
 from random import random
 from random import choice
@@ -21,6 +19,7 @@ import time
 import platform
 from discord.ext import commands
 import json
+import requests
 
 import random
 
@@ -173,40 +172,37 @@ async def roll(ctx, number_of_dice: int, number_of_sides: int):
 """"
     #API QUE DEMONSTRA AS CURRENCIES
     
-    LINK: https://www.exchangerate-api.com/docs/python-currency-api
-    
-                import requests
 
-                # Where USD is the base currency you want to use
-                url = 'https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/EUR'
-                
-                # Making our request
-                response = requests.get(url)
-                data = response.json()
-                
-                # Your JSON object
-                print data
+import requests
+
+url = "https://api.apilayer.com/exchangerates_data/latest?symbols={symbols}&base={base}"
+
+payload = {}
+headers= {
+  "apikey": "CaZLiWDEvrEuh4Ot02XeR4fSYZpS6qBt"
+}
+
+response = requests.request("GET", url, headers=headers, data = payload)
+
+status_code = response.status_code
+result = response.text
                 
 """
 
-# TODO: < TESTAR ESTA ADIÇÃO >
+
+
 # TODO: < TESTAR BUGS >
-#
-# @client.command()
-# async def hello(inputValue, TypeOfCurrencyInput):
-# import requests
-
-# API_URL = 'https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/EUR'
-
-# Making our request
-#  response = requests.get(API_URL)
-#  data = response.json()
-
-# for currency in data.conversion_rates:
-#  if currency == TypeOfCurrencyInput:
-#    print(f"{inputValue} Euros = {inputValue * currency}")
-
-# await currencyInput.send("Ola sou um bot chines")
+# TODO: <Facilitar , melhorar interface>
+@client.command(name='convert', help='Converts x amount in a currency to another')
+async def money(ctx,  amount: int,fromCurrency, toCurrency,):
+    import requests
+    url = 'http://data.fixer.io/api/latest?access_key=7370ff2962d49abefc56c32f5bc74aa8'
+    response = requests.get(url)
+    rate = response.json()['rates'][fromCurrency]
+    amount_EUR = amount / rate
+    amount_final = amount_EUR * (response.json()['rates'][toCurrency])
+    amount_final = round(amount_final,3)
+    await ctx.send(f"{amount} {fromCurrency} is {amount_final} {toCurrency}")
 
 
 client.run(TOKEN)
