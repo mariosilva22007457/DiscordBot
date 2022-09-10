@@ -1,6 +1,17 @@
-import os
-import requests
+"""
+        # TODO: LIST
 
+# TODO: < TESTAR ESTA ADIÇÃO >
+# TODO: < TESTAR BUGS >
+# TODO: < ADIÇÃO -> NÃO FUNCIONA >
+# TODO: < RESOLVER BUGS >
+# TODO: < PROBLEMAS NA EXECUÇÃO >
+# TODO: < NÃO FUNCIONA >
+
+"""
+
+import os
+from random import random
 from dotenv import load_dotenv
 import discord
 from colorama import Back, Fore, Style
@@ -8,7 +19,7 @@ import time
 import platform
 from discord.ext import commands
 import json
-import requests
+
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
@@ -16,16 +27,23 @@ TOKEN = os.getenv('TOKEN')
 intents = discord.Intents.default()
 intents.members = True
 
-client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
+client = commands.Bot(
+    command_prefix='!',
+    intents=discord.Intents.all()
+)
 
+# Discord Channel ID
+channel_ID = 837870956781109258
 
 @client.command()
 async def hello(ctx):
-    await ctx.send("Ola sou um bot chines ")
+
+    await ctx.send("Ola sou um bot chines")
 
 
 @client.event
 async def on_ready():
+
     prfx = (
             Back.LIGHTBLACK_EX
             + Fore.GREEN
@@ -42,6 +60,7 @@ async def on_ready():
 
 @client.command(aliases=['close', 'stop'])
 async def shutdown(ctx):
+
     await ctx.send("Shutting down the bot")
     await client.close()
 
@@ -109,7 +128,9 @@ async def userinfo(ctx, member: discord.Member = None):
 
 @client.event
 async def on_member_join(member):
+
     import requests
+
     url = "https://joke3.p.rapidapi.com/v1/joke/%7Bid%7D/%7Bproperty%7D"
 
     headers = {
@@ -117,16 +138,42 @@ async def on_member_join(member):
         "X-RapidAPI-Host": "joke3.p.rapidapi.com"
     }
 
-    response = requests.request("GET", url, headers=headers)
-    channel = client.get_channel(837870956781109258)
-    await channel.send("Welcome!" + f" {member.display_name} ")
-    await channel.send(json.loads(response.text)['content'])
+    response = requests.request(
+        "GET", url, headers=headers
+    )
+
+    channel = client.get_channel(channel_ID)
+
+    await channel.send(
+        "Welcome!" + f" {member.display_name} "
+    )
+
+    await channel.send(
+        json.loads(response.text)['content']
+    )
 
 
 @client.event
 async def on_member_remove(member):
-    channel_REMOVED_USER = client.get_channel(837870956781109258)
-    await channel_REMOVED_USER.send("Goodbye!" + f" {member.display_name} ")
+
+    channel_REMOVED_USER = client.get_channel(channel_ID)
+
+    await channel_REMOVED_USER.send(
+        "Goodbye!" + f" {member.display_name} "
+    )
+
+
+# TODO: < TESTAR ESTA ADIÇÃO >
+# TODO: < TESTAR BUGS >
+@client.command(name='roll_dice', help='Simulates rolling dice.')
+async def roll(ctx, number_of_dice, number_of_sides):
+    dice = [
+        str(random.choice(range(1, number_of_sides + 1)))
+        for _ in range(number_of_dice)
+    ]
+    await ctx.send(', '.join(dice))
+
+
 
 
 client.run(TOKEN)
